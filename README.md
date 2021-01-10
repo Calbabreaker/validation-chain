@@ -4,17 +4,21 @@
 
 ## Install
 
----
+`npm:`
 
 ```sh
 npm install validation-chainer
 ```
 
+`yarn:`
+
+```sh
+yarn add validation-chainer
+```
+
 ## Usage
 
----
-
-### Basic Usage:
+Basic Usage:
 
 ```ts
 import { startChain } from "validation-chainer";
@@ -73,7 +77,7 @@ Returns:
 
 ---
 
-### Works with promises.
+Promise example:
 
 ```ts
 const data = {
@@ -93,7 +97,7 @@ const errors = await startChain(data)
 
 ---
 
-### Works quite well with the [validator](https://www.npmjs.com/package/validator) library.
+Using the [validator](https://www.npmjs.com/package/validator) library.
 
 ```ts
 import { startChain } from "validation-chainer";
