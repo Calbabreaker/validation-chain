@@ -1,0 +1,15 @@
+{
+  "name": "validation-chain",
+  "version": "1.0.0",
+  "description": "A visualy pleasing way to validate your inputs",
+  "main": "lib/index.js",
+  "types": "lib",
+  "scripts": {
+    "build": "tsc -p ."
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^4.1.3"
+  }
+}
