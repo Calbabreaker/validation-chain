@@ -1,8 +1,10 @@
 # Validation Chainer
 
-> A visualy pleasing way to validate your inputs
+> A tool to validate your inputs in a visualy pleasing and flexible way.
 
 ## Install
+
+---
 
 ```sh
 npm install validation-chainer
@@ -10,7 +12,9 @@ npm install validation-chainer
 
 ## Usage
 
-Basic Usage:
+---
+
+### Basic Usage:
 
 ```ts
 import { startChain } from "validation-chainer";
@@ -19,6 +23,7 @@ import { startChain } from "validation-chainer";
 const data = {
     foo: "123",
     bar: null,
+    zee: "hello there"
 };
 
 // starts the chain with the data
@@ -34,15 +39,20 @@ const errors = await startChain(data)
     .check("bar")
     .validate((value) => bar != null, "Bar must not be empty")
 
+    .check("zee")
+    // ensures that bar is valid first
+    .ensureProperty("bar", "Bar is invalid")
+    .sanitize((value) => value.toUpperCase())
+
     // make sure to call this!
     .pack();
 
 // check to see if there are any errors
 if (errors.length > 0)
-    console.error(errors);
+    return errors;
 ```
 
-Logs in console:
+Returns:
 
 ```ts
 [
@@ -54,5 +64,50 @@ Logs in console:
         property: "bar",
         message: "Bar must not be empty",
     },
+    {
+        property: "zee",
+        message: "Bar is invalid",
+    },
 ];
+```
+
+---
+
+### Works with promises.
+
+```ts
+const data = {
+    username: "bob",
+};
+
+const errors = await startChain(data)
+    .check("bob")
+    // checks to see if the username is in the database
+    .validate(
+        async () => (await database.findOne({ username })) != null,
+        "That username doesn't exist"
+    )
+
+    .pack();
+```
+
+---
+
+### Works quite well with the [validator](https://www.npmjs.com/package/validator) library.
+
+```ts
+import { startChain } from "validation-chainer";
+import validator from "validator";
+
+const data = {
+    name: "💩",
+};
+
+const errors = await startChain(data)
+    .check("name") // fails on "Username must contain valid alpha-numeric characters"
+    .sanitize(validator.stripLow)
+    .sanitize(validator.trim)
+    .validate(validator.isAlphaNumeric, "Name must contain valid alpha-numeric characters")
+
+    .pack();
 ```
