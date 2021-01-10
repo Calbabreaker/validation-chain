@@ -1,7 +1,7 @@
 {
   "name": "validation-chainer",
   "version": "1.0.0",
-  "description": "A tool to validate your inputs in a visualy pleasing way with the power of chaining.",
+  "description": "A tool to validate your inputs in a visualy pleasing and flexible way.",
   "main": "lib/index.js",
   "types": "lib",
   "scripts": {
