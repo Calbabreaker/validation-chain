@@ -7,15 +7,23 @@
   "scripts": {
     "build": "tsc -p ."
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Calbabreaker/validation-chainer.git"
+  },
   "keywords": [
     "library",
     "validation",
     "chain",
     "typescript"
   ],
-  "author": "Calbabreaker",
-  "license": "GPL-3",
   "devDependencies": {
     "typescript": "^4.1.3"
-  }
+  },
+  "author": "Calbabreaker",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Calbabreaker/validation-chainer/issues"
+  },
+  "homepage": "https://github.com/Calbabreaker/validation-chainer#readme"
 }
