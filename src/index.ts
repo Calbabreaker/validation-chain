@@ -109,20 +109,18 @@ export class ValidationChainer<ObjType> {
      * The function to call at the end of the chain.
      * This is will start executing the functions in the callstacks.
      *
-     * @returns An array of ValidationErrors.
+     * @returns A promise that resolves to an array of ValidationErrors. It's a promise because the validation function might contiain promises.
      */
     async pack(): Promise<ValidationError[]> {
         this.errors = [];
         for (const callStack of this._callStackArray) {
             for (let i = 0; i < callStack.length; i++) {
                 const success = await callStack[i]();
-                if (!success) {
-                    if (this._currentObjData.message != null) {
-                        this.errors.push({
-                            property: this._currentObjData.propertyKey as string,
-                            message: this._currentObjData.message,
-                        });
-                    }
+                if (!success && this._currentObjData.message != null) {
+                    this.errors.push({
+                        property: this._currentObjData.propertyKey as string,
+                        message: this._currentObjData.message,
+                    });
 
                     break;
                 }

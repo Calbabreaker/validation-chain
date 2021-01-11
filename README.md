@@ -25,9 +25,8 @@ import { startChain } from "validation-chainer";
 
 // some psuedo data
 const data = {
-    foo: "123",
-    bar: null,
-    zee: "hello there"
+    foo: "yes",
+    bar: "PLEASE"
 };
 
 // starts the chain with the data
@@ -35,62 +34,55 @@ const errors = await startChain(data)
     // starts check on foo
     .check("foo")
     // does some validation
-    .validate((value) => value typeof "string", "Foo is not a string")
-    .validate((value) => value.length >= 3, "Foo must be at least 3 characters")
-    // makes foo lower case (modifies the actual data getting passed in)
-    .sanitize((value) => value.toLowerCase())
+    .validate((value) => value typeof "string", "Foo is not a string") // passes this
+    .validate((value) => value.length >= 8, "Foo must be at least 8 characters") // fails here
 
     .check("bar")
-    .validate((value) => bar != null, "Bar must not be empty")
-
-    .check("zee")
-    // ensures that bar is valid first
-    .ensureProperty("bar", "Bar is invalid")
-    .sanitize((value) => value.toUpperCase())
+    // makes bar lower case (modifies the object getting passed in) so bar is now please
+    .sanitize((value) => value.toLowerCase())
+    .validate((value) => value == "please") // passes here because bar is now please
 
     // make sure to call this!
+    // this returns a promise so make sure to await it as well
     .pack();
 
 // check to see if there are any errors
 if (errors.length > 0)
-    return errors;
+    // do stuff with the errors
 ```
 
-Returns:
+Errors are:
 
 ```ts
 [
     {
         property: "foo",
-        message: "Foo is not a string",
-    },
-    {
-        property: "bar",
-        message: "Bar must not be empty",
-    },
-    {
-        property: "zee",
-        message: "Bar is invalid",
+        message: "Foo must be at least 8 characters",
     },
 ];
 ```
 
 ---
 
-Promise example:
+Username, password example:
 
 ```ts
 const data = {
     username: "bob",
+    password: "very strong password",
 };
 
+const user = await database.findOne({ username: data.username });
+
 const errors = await startChain(data)
-    .check("bob")
-    // checks to see if the username is in the database
-    .validate(
-        async () => (await database.findOne({ username })) != null,
-        "That username doesn't exist"
-    )
+    .check("username")
+    .validate(() => user != null, "Username doesn't exist")
+
+    .check("password")
+    // makes sure username is valid first
+    .ensureProperty("username", "Username is invalid")
+    // checks password using asynchronous hashing algorithm
+    .validate(async (value) => await hash.verify(value, user.password), "Password is incorrect")
 
     .pack();
 ```
@@ -104,13 +96,15 @@ import { startChain } from "validation-chainer";
 import validator from "validator";
 
 const data = {
-    name: "💩",
+    name: "                 💩      ",
 };
 
 const errors = await startChain(data)
-    .check("name") // fails on "Username must contain valid alpha-numeric characters"
+    .check("name")
+    // removes whitespace at the beggining and end of name so it's now just "💩"
     .sanitize(validator.stripLow)
     .sanitize(validator.trim)
+    // property fails here because of the emoji
     .validate(validator.isAlphaNumeric, "Name must contain valid alpha-numeric characters")
 
     .pack();
