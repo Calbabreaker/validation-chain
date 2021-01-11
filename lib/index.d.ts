@@ -10,15 +10,15 @@ export interface ValidationError {
  */
 export declare class ValidationChainer<ObjType> {
     private _objToValidate;
-    private _callStackArray;
-    private _currentObjData;
+    private _callstackArray;
+    private _currentObjProps;
     errors?: ValidationError[];
     constructor(objToValidate: ObjType);
     /**
      * Starts a new validation call stack with the property.
      *
      * @param propertyKey - The property to use.
-     * @returns The valdation chainer to chain.
+     * @returns The validation chainer (this object) to chain.
      */
     check(propertyKey: keyof ObjType): ValidationChainer<ObjType>;
     /**
@@ -27,29 +27,29 @@ export declare class ValidationChainer<ObjType> {
      *
      * @param func A function that returns whether or not the property was valid. It can be a promise.
      * @param message The message to show in the errors when the property fails validation.
-     * @returns The valdation chainer to chain.
+     * @returns The validation chainer (this object) to chain.
      */
-    validate(func: (value: any) => Promise<boolean> | boolean, message?: string): ValidationChainer<ObjType>;
+    validate<T = any>(func: (value: T) => Promise<boolean> | boolean, message?: string): ValidationChainer<ObjType>;
     /**
      * Replaces the property value with whatever the function returns.
      *
      * @param func A function to replace the property value. It can be a promise.
-     * @returns The valdation chainer to chain.
+     * @returns The validation chainer (this object) to chain.
      */
-    sanitize(func: (value: any) => Promise<any> | any): ValidationChainer<ObjType>;
+    sanitize<T = any>(func: (value: T) => Promise<T> | T): ValidationChainer<ObjType>;
     /**
      * Fails the property if the previously checked property that is passed in has failed.
      *
      * @param propertyKey The property to check
      * @param message The message to show in the errors when it failed. Leave this blank to use the failed property's message.
-     * @returns The valdation chainer to chain.
+     * @returns The validation chainer (this object) to chain.
      */
     ensureProperty(propertyKey: keyof ObjType, message?: string): ValidationChainer<ObjType>;
     /**
      * The function to call at the end of the chain.
      * This is will start executing the functions in the callstacks.
      *
-     * @returns An array of ValidationErrors.
+     * @returns A promise that resolves to an array of ValidationErrors. It's a promise because the validation functions might contain promises.
      */
     pack(): Promise<ValidationError[]>;
 }
