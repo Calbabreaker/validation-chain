@@ -15,7 +15,6 @@ export class ValidationChainer<ObjType> {
     private _currentObjData: {
         propertyKey: keyof ObjType;
         message?: string;
-        value: any;
     };
 
     errors?: ValidationError[];
@@ -35,7 +34,6 @@ export class ValidationChainer<ObjType> {
             () => {
                 this._currentObjData = {
                     propertyKey,
-                    value: this._objToValidate[propertyKey],
                 };
 
                 return true;
@@ -58,7 +56,7 @@ export class ValidationChainer<ObjType> {
         message: string = ""
     ): ValidationChainer<ObjType> {
         this._callStackArray[this._callStackArray.length - 1].push(async () => {
-            const success = await func(this._currentObjData.value);
+            const success = await func(this._objToValidate[this._currentObjData.propertyKey]);
             this._currentObjData.message = message;
             return success;
         });
@@ -74,7 +72,9 @@ export class ValidationChainer<ObjType> {
      */
     sanitize(func: (value: any) => Promise<any> | any): ValidationChainer<ObjType> {
         this._callStackArray[this._callStackArray.length - 1].push(async () => {
-            this._currentObjData.value = await func(this._currentObjData.value);
+            this._objToValidate[this._currentObjData.propertyKey] = await func(
+                this._objToValidate[this._currentObjData.propertyKey]
+            );
             return true;
         });
 
