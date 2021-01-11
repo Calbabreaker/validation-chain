@@ -4,13 +4,13 @@
 
 ## Install
 
-`npm:`
+With npm:
 
 ```sh
 npm install validation-chainer
 ```
 
-`yarn:`
+With yarn:
 
 ```sh
 yarn add validation-chainer
@@ -20,10 +20,9 @@ yarn add validation-chainer
 
 Basic Usage:
 
-```ts
+```js
 import { startChain } from "validation-chainer";
 
-// some psuedo data
 const data = {
     foo: "yes",
     bar: "PLEASE"
@@ -53,7 +52,7 @@ if (errors.length > 0)
 
 Errors are:
 
-```ts
+```js
 [
     {
         property: "foo",
@@ -66,7 +65,7 @@ Errors are:
 
 Username, password example:
 
-```ts
+```js
 const data = {
     username: "bob",
     password: "very strong password",
@@ -91,7 +90,7 @@ const errors = await startChain(data)
 
 Using the [validator](https://www.npmjs.com/package/validator) library.
 
-```ts
+```js
 import { startChain } from "validation-chainer";
 import validator from "validator";
 
@@ -108,4 +107,24 @@ const errors = await startChain(data)
     .validate(validator.isAlphaNumeric, "Name must contain valid alpha-numeric characters")
 
     .pack();
+```
+
+## Development
+
+Install packages first:
+
+```sh
+npm install
+```
+
+Build:
+
+```sh
+npm run build
+```
+
+Do tests:
+
+```sh
+npm run test
 ```
