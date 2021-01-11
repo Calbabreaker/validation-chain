@@ -11,8 +11,8 @@ export interface ValidationError {
  */
 export class ValidationChainer<ObjType> {
     private _objToValidate: ObjType;
-    private _callStackArray: (() => Promise<boolean> | boolean)[][] = [];
-    private _currentObjData: {
+    private _callstackArray: (() => Promise<boolean> | boolean)[][] = [];
+    private _currentObjProps: {
         propertyKey: keyof ObjType;
         message?: string;
     };
@@ -27,12 +27,12 @@ export class ValidationChainer<ObjType> {
      * Starts a new validation call stack with the property.
      *
      * @param propertyKey - The property to use.
-     * @returns The valdation chainer to chain.
+     * @returns The validation chainer (this object) to chain.
      */
     check(propertyKey: keyof ObjType): ValidationChainer<ObjType> {
-        this._callStackArray.push([
+        this._callstackArray.push([
             () => {
-                this._currentObjData = {
+                this._currentObjProps = {
                     propertyKey,
                 };
 
@@ -49,15 +49,17 @@ export class ValidationChainer<ObjType> {
      *
      * @param func A function that returns whether or not the property was valid. It can be a promise.
      * @param message The message to show in the errors when the property fails validation.
-     * @returns The valdation chainer to chain.
+     * @returns The validation chainer (this object) to chain.
      */
-    validate(
-        func: (value: any) => Promise<boolean> | boolean,
+    validate<T = any>(
+        func: (value: T) => Promise<boolean> | boolean,
         message: string = ""
     ): ValidationChainer<ObjType> {
-        this._callStackArray[this._callStackArray.length - 1].push(async () => {
-            const success = await func(this._objToValidate[this._currentObjData.propertyKey]);
-            this._currentObjData.message = message;
+        this._callstackArray[this._callstackArray.length - 1].push(async () => {
+            const propertyKey = this._currentObjProps.propertyKey;
+            const success = await func((this._objToValidate[propertyKey] as any) as T);
+
+            this._currentObjProps.message = message;
             return success;
         });
 
@@ -68,13 +70,15 @@ export class ValidationChainer<ObjType> {
      * Replaces the property value with whatever the function returns.
      *
      * @param func A function to replace the property value. It can be a promise.
-     * @returns The valdation chainer to chain.
+     * @returns The validation chainer (this object) to chain.
      */
-    sanitize(func: (value: any) => Promise<any> | any): ValidationChainer<ObjType> {
-        this._callStackArray[this._callStackArray.length - 1].push(async () => {
-            this._objToValidate[this._currentObjData.propertyKey] = await func(
-                this._objToValidate[this._currentObjData.propertyKey]
-            );
+    sanitize<T = any>(func: (value: T) => Promise<T> | T): ValidationChainer<ObjType> {
+        this._callstackArray[this._callstackArray.length - 1].push(async () => {
+            const propertyKey = this._currentObjProps.propertyKey;
+            this._objToValidate[propertyKey] = (await func(
+                (this._objToValidate[propertyKey] as any) as T
+            )) as any;
+
             return true;
         });
 
@@ -86,14 +90,14 @@ export class ValidationChainer<ObjType> {
      *
      * @param propertyKey The property to check
      * @param message The message to show in the errors when it failed. Leave this blank to use the failed property's message.
-     * @returns The valdation chainer to chain.
+     * @returns The validation chainer (this object) to chain.
      */
     ensureProperty(propertyKey: keyof ObjType, message?: string): ValidationChainer<ObjType> {
-        this._callStackArray[this._callStackArray.length - 1].push(() => {
+        this._callstackArray[this._callstackArray.length - 1].push(() => {
             if (this.errors != null) {
                 for (const error of this.errors) {
                     if (error.property == (propertyKey as string)) {
-                        this._currentObjData.message = message ?? error.message;
+                        this._currentObjProps.message = message ?? error.message;
                         return false;
                     }
                 }
@@ -109,17 +113,17 @@ export class ValidationChainer<ObjType> {
      * The function to call at the end of the chain.
      * This is will start executing the functions in the callstacks.
      *
-     * @returns A promise that resolves to an array of ValidationErrors. It's a promise because the validation function might contiain promises.
+     * @returns A promise that resolves to an array of ValidationErrors. It's a promise because the validation functions might contain promises.
      */
     async pack(): Promise<ValidationError[]> {
         this.errors = [];
-        for (const callStack of this._callStackArray) {
-            for (let i = 0; i < callStack.length; i++) {
-                const success = await callStack[i]();
-                if (!success && this._currentObjData.message != null) {
+        for (const callstack of this._callstackArray) {
+            for (let i = 0; i < callstack.length; i++) {
+                const success = await callstack[i]();
+                if (!success && this._currentObjProps.message != null) {
                     this.errors.push({
-                        property: this._currentObjData.propertyKey as string,
-                        message: this._currentObjData.message,
+                        property: this._currentObjProps.propertyKey as string,
+                        message: this._currentObjProps.message,
                     });
 
                     break;

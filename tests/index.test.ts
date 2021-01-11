@@ -9,13 +9,13 @@ test("should give error on properties status and bignumber but not on notanumber
 
     const errors = await startChain(data)
         .check("status")
-        .validate((value) => value === "happy", "Why are you not happy")
+        .validate<string>((value) => value === "happy", "Why are you not happy")
 
         .check("bignumber")
-        .validate((value) => value > 10 * 100, "Thats not big")
+        .validate<number>((value) => value > 10 * 100, "Thats not big")
 
         .check("notanumber")
-        .validate((value) => isNaN(value))
+        .validate<number>((value) => isNaN(value))
 
         .pack();
 
@@ -43,8 +43,8 @@ test("should modify property iwantmodify and give no errors", async () => {
 
     const errors = await startChain(data)
         .check("iwantmodify")
-        .sanitize((value) => value.replace("stufftobemodified", "modified!"))
-        .validate((value) => !value.includes("stufftobemodified"))
+        .sanitize<string>((value) => value.replace("stufftobemodified", "modified!"))
+        .validate<string>((value) => !value.includes("stufftobemodified"))
         .validate(promiseFunc)
 
         .pack();
@@ -63,7 +63,7 @@ test("should give error on properties token and password because username was in
 
     const errors = await startChain(data)
         .check("username")
-        .validate((value) => value == "Henro", "Username does not exist")
+        .validate<string>((value) => value == "Henro", "Username does not exist")
 
         .check("password")
         .ensureProperty("username", "Username is invalid")
