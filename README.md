@@ -120,14 +120,20 @@ Install packages first:
 npm install
 ```
 
-Build:
-
-```sh
-npm run build
-```
-
 Do tests:
 
 ```sh
 npm run test
+```
+
+Do linting:
+
+```sh
+npm run lint
+```
+
+Build:
+
+```sh
+npm run build
 ```

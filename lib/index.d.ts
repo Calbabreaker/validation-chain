@@ -25,23 +25,23 @@ export declare class ValidationChainer<ObjType> {
      * Takes in a function to check if the property was valid and shows the message in the errors when not.
      * It will stop the current validation call stack if it failed.
      *
-     * @param func A function that returns whether or not the property was valid. It can be a promise.
-     * @param message The message to show in the errors when the property fails validation.
+     * @param func - A function that returns whether or not the property was valid. It can be a promise.
+     * @param message - The message to show in the errors when the property fails validation.
      * @returns The validation chainer (this object) to chain.
      */
-    validate<T = any>(func: (value: T) => Promise<boolean> | boolean, message?: string): ValidationChainer<ObjType>;
+    validate<T = unknown>(func: (value: T) => Promise<boolean> | boolean, message?: string): ValidationChainer<ObjType>;
     /**
      * Replaces the property value with whatever the function returns.
      *
-     * @param func A function to replace the property value. It can be a promise.
+     * @param func - A function to replace the property value. It can be a promise.
      * @returns The validation chainer (this object) to chain.
      */
-    sanitize<T = any>(func: (value: T) => Promise<T> | T): ValidationChainer<ObjType>;
+    sanitize<T = unknown>(func: (value: T) => Promise<T> | T): ValidationChainer<ObjType>;
     /**
      * Fails the property if the previously checked property that is passed in has failed.
      *
-     * @param propertyKey The property to check
-     * @param message The message to show in the errors when it failed. Leave this blank to use the failed property's message.
+     * @param propertyKey - The property to check
+     * @param message - The message to show in the errors when it failed. Leave this blank to use the failed property's message.
      * @returns The validation chainer (this object) to chain.
      */
     ensureProperty(propertyKey: keyof ObjType, message?: string): ValidationChainer<ObjType>;
