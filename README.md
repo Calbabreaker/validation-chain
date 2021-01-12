@@ -1,6 +1,8 @@
 # Validation Chainer
 
-> A tool to validate your inputs in a visualy pleasing and flexible way.
+A tool to validate your inputs in a visualy pleasing and flexible way.
+
+[![npm](https://img.shields.io/npm/v/validation-chainer.svg)](https://www.npmjs.com/package/validation-chainer)
 
 ## Install
 
@@ -88,7 +90,7 @@ const errors = await startChain(data)
 
 ---
 
-Using the [validator](https://www.npmjs.com/package/validator) library.
+Using the [validator](https://www.npmjs.com/package/validator) library:
 
 ```js
 import { startChain } from "validation-chainer";
