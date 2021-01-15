@@ -31,16 +31,15 @@ export class ValidationChainer<ObjType> {
      * @returns The validation chainer (this object) to chain.
      */
     check(propertyKey: keyof ObjType): ValidationChainer<ObjType> {
-        this._callstackArray.push([
-            () => {
-                this._currentObjProps = {
-                    propertyKey,
-                };
+        const callFunc = async () => {
+            this._currentObjProps = {
+                propertyKey,
+            };
 
-                return true;
-            },
-        ]);
+            return true;
+        };
 
+        this._callstackArray.push([callFunc]);
         return this;
     }
 
@@ -56,14 +55,17 @@ export class ValidationChainer<ObjType> {
         func: (value: T) => Promise<boolean> | boolean,
         message = ""
     ): ValidationChainer<ObjType> {
-        this._callstackArray[this._callstackArray.length - 1].push(async () => {
+        const callFunc = async () => {
             const propertyKey = this._currentObjProps.propertyKey;
-            const success = await func((this._objToValidate[propertyKey] as any) as T);
+            const propertyValue = (this._objToValidate[propertyKey] as unknown) as T;
+
+            const success = await func(propertyValue);
 
             this._currentObjProps.message = message;
             return success;
-        });
+        };
 
+        this._callstackArray[this._callstackArray.length - 1].push(callFunc);
         return this;
     }
 
@@ -74,15 +76,17 @@ export class ValidationChainer<ObjType> {
      * @returns The validation chainer (this object) to chain.
      */
     sanitize<T = any>(func: (value: T) => Promise<T> | T): ValidationChainer<ObjType> {
-        this._callstackArray[this._callstackArray.length - 1].push(async () => {
+        const callFunc = async () => {
             const propertyKey = this._currentObjProps.propertyKey;
-            this._objToValidate[propertyKey] = ((await func(
-                (this._objToValidate[propertyKey] as any) as T
-            )) as any) as ObjType[keyof ObjType];
+            const propertyValue = (this._objToValidate[propertyKey] as unknown) as T;
+
+            const result = await func(propertyValue);
+            this._objToValidate[propertyKey] = (result as unknown) as ObjType[keyof ObjType];
 
             return true;
-        });
+        };
 
+        this._callstackArray[this._callstackArray.length - 1].push(callFunc);
         return this;
     }
 
@@ -94,19 +98,20 @@ export class ValidationChainer<ObjType> {
      * @returns The validation chainer (this object) to chain.
      */
     ensure(propertyKey: keyof ObjType, message?: string): ValidationChainer<ObjType> {
-        this._callstackArray[this._callstackArray.length - 1].push(() => {
-            if (this.errors != null) {
-                for (const error of this.errors) {
-                    if (error.property == (propertyKey as string)) {
-                        this._currentObjProps.message = message ?? error.message;
-                        return false;
-                    }
+        const callFunc = async () => {
+            if (this.errors == null) return true;
+
+            for (const error of this.errors) {
+                if (error.property == (propertyKey as string)) {
+                    this._currentObjProps.message = message ?? error.message;
+                    return false;
                 }
             }
 
             return true;
-        });
+        };
 
+        this._callstackArray[this._callstackArray.length - 1].push(callFunc);
         return this;
     }
 
@@ -121,6 +126,7 @@ export class ValidationChainer<ObjType> {
         for (const callstack of this._callstackArray) {
             for (let i = 0; i < callstack.length; i++) {
                 const success = await callstack[i]();
+
                 if (!success && this._currentObjProps.message != null) {
                     this.errors.push({
                         property: this._currentObjProps.propertyKey as string,

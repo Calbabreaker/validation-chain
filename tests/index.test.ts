@@ -31,6 +31,7 @@ test("should give error on properties status and bignumber but not on notanumber
 test("should modify property iwantmodify and give no errors", async () => {
     const data = {
         iwantmodify: "stufftobemodified, stuffnottobemodifed",
+        test: true,
     };
 
     const promiseFunc = () => {
@@ -46,6 +47,10 @@ test("should modify property iwantmodify and give no errors", async () => {
         .sanitize<string>((value) => value.replace("stufftobemodified", "modified!"))
         .validate<string>((value) => !value.includes("stufftobemodified"))
         .validate(promiseFunc)
+
+        .check("test")
+        .ensure("iwantmodify")
+        .validate((test) => test)
 
         .pack();
 

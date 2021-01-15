@@ -152,6 +152,8 @@ Install packages first:
 npm install
 ```
 
+Change Code.
+
 Do tests:
 
 ```sh
@@ -169,3 +171,5 @@ Build:
 ```sh
 npm run build
 ```
+
+Profit!
