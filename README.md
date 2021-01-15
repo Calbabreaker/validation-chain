@@ -85,7 +85,7 @@ const errors = await startChain(data)
 
     .check("password")
     // makes sure username is valid first
-    .ensureProperty("username", "Username is invalid")
+    .ensure("username", "Username is invalid")
     // checks password using asynchronous hashing algorithm
     .validate(
         async (storedPass) => await argon2.verify(storedPass, user.password),

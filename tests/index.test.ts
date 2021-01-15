@@ -66,11 +66,11 @@ test("should give error on properties token and password because username was in
         .validate<string>((value) => value == "Henro", "Username does not exist")
 
         .check("password")
-        .ensureProperty("username", "Username is invalid")
+        .ensure("username", "Username is invalid")
         .validate(() => false, "A")
 
         .check("token")
-        .ensureProperty("username")
+        .ensure("username")
         .validate(() => false, "B")
 
         .pack();

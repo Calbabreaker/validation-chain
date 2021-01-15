@@ -93,7 +93,7 @@ export class ValidationChainer<ObjType> {
      * @param message - The message to show in the errors when it failed. Leave this blank to use the failed property's message.
      * @returns The validation chainer (this object) to chain.
      */
-    ensureProperty(propertyKey: keyof ObjType, message?: string): ValidationChainer<ObjType> {
+    ensure(propertyKey: keyof ObjType, message?: string): ValidationChainer<ObjType> {
         this._callstackArray[this._callstackArray.length - 1].push(() => {
             if (this.errors != null) {
                 for (const error of this.errors) {
