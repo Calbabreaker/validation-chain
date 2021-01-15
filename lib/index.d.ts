@@ -29,14 +29,14 @@ export declare class ValidationChainer<ObjType> {
      * @param message - The message to show in the errors when the property fails validation.
      * @returns The validation chainer (this object) to chain.
      */
-    validate<T = unknown>(func: (value: T) => Promise<boolean> | boolean, message?: string): ValidationChainer<ObjType>;
+    validate<T = never>(func: (value: T) => Promise<boolean> | boolean, message?: string): ValidationChainer<ObjType>;
     /**
      * Replaces the property value with whatever the function returns.
      *
      * @param func - A function to replace the property value. It can be a promise.
      * @returns The validation chainer (this object) to chain.
      */
-    sanitize<T = unknown>(func: (value: T) => Promise<T> | T): ValidationChainer<ObjType>;
+    sanitize<T = never>(func: (value: T) => Promise<T> | T): ValidationChainer<ObjType>;
     /**
      * Fails the property if the previously checked property that is passed in has failed.
      *
