@@ -66,9 +66,12 @@ Logs in console:
 
 ---
 
-Username, password example:
+Login verify example:
 
 ```js
+import { startChain } from "validation-chainer";
+import argon2 from "argon2";
+
 const data = {
     username: "bob",
     password: "very strong password",
@@ -84,7 +87,7 @@ const errors = await startChain(data)
     // makes sure username is valid first
     .ensureProperty("username", "Username is invalid")
     // checks password using asynchronous hashing algorithm
-    .validate(async (value) => await hash.verify(value, user.password), "Password is incorrect")
+    .validate(async (value) => await argon2.verify(value, user.password), "Password is incorrect")
 
     .pack();
 ```
