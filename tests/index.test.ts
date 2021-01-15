@@ -9,13 +9,13 @@ test("should give error on properties status and bignumber but not on notanumber
 
     const errors = await startChain(data)
         .check("status")
-        .validate<string>((value) => value === "happy", "Why are you not happy")
+        .validate((value) => value === "happy", "Why are you not happy")
 
         .check("bignumber")
-        .validate<number>((value) => value > 10 * 100, "Thats not big")
+        .validate((value) => value > 10 * 100, "Thats not big")
 
         .check("notanumber")
-        .validate<number>((value) => isNaN(value))
+        .validate((value) => isNaN(value))
 
         .pack();
 
