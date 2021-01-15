@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * A interface that ValidationChainer uses to show all the errors.
  */
@@ -51,13 +52,13 @@ export class ValidationChainer<ObjType> {
      * @param message - The message to show in the errors when the property fails validation.
      * @returns The validation chainer (this object) to chain.
      */
-    validate<T = never>(
+    validate<T = any>(
         func: (value: T) => Promise<boolean> | boolean,
         message = ""
     ): ValidationChainer<ObjType> {
         this._callstackArray[this._callstackArray.length - 1].push(async () => {
             const propertyKey = this._currentObjProps.propertyKey;
-            const success = await func((this._objToValidate[propertyKey] as never) as T);
+            const success = await func((this._objToValidate[propertyKey] as any) as T);
 
             this._currentObjProps.message = message;
             return success;
@@ -72,12 +73,12 @@ export class ValidationChainer<ObjType> {
      * @param func - A function to replace the property value. It can be a promise.
      * @returns The validation chainer (this object) to chain.
      */
-    sanitize<T = never>(func: (value: T) => Promise<T> | T): ValidationChainer<ObjType> {
+    sanitize<T = any>(func: (value: T) => Promise<T> | T): ValidationChainer<ObjType> {
         this._callstackArray[this._callstackArray.length - 1].push(async () => {
             const propertyKey = this._currentObjProps.propertyKey;
             this._objToValidate[propertyKey] = ((await func(
-                (this._objToValidate[propertyKey] as never) as T
-            )) as never) as ObjType[keyof ObjType];
+                (this._objToValidate[propertyKey] as any) as T
+            )) as any) as ObjType[keyof ObjType];
 
             return true;
         });

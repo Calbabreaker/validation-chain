@@ -9,7 +9,7 @@ test("should give error on properties status and bignumber but not on notanumber
 
     const errors = await startChain(data)
         .check("status")
-        .validate((value) => value === "happy", "Why are you not happy")
+        .validate((value) => value.length === 5 && value === "happy", "Why are you not happy")
 
         .check("bignumber")
         .validate((value) => value > 10 * 100, "Thats not big")
