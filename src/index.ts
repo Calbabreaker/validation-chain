@@ -25,7 +25,7 @@ export class ValidationChainer<ObjType> {
     }
 
     /**
-     * Starts a new validation call stack with the property.
+     * Selects a property to start checking. All following validate, sanitize, ensure calls will be on this property.
      *
      * @param propertyKey - The property to use.
      * @returns The validation chainer (this object) to chain.
@@ -46,9 +46,9 @@ export class ValidationChainer<ObjType> {
 
     /**
      * Takes in a function to check if the property was valid and shows the message in the errors when not.
-     * It will stop the current validation call stack if it failed.
+     * It will stop checking the selected property if it failed.
      *
-     * @param func - A function that returns whether or not the property was valid. It can be a promise.
+     * @param func - A function that takes the selected property value and returns whether or not the property was valid. It can be a promise.
      * @param message - The message to show in the errors when the property fails validation.
      * @returns The validation chainer (this object) to chain.
      */
@@ -70,7 +70,7 @@ export class ValidationChainer<ObjType> {
     /**
      * Replaces the property value with whatever the function returns.
      *
-     * @param func - A function to replace the property value. It can be a promise.
+     * @param func - A function that takes the selected property value and returns the replaced value. It can be a promise.
      * @returns The validation chainer (this object) to chain.
      */
     sanitize<T = any>(func: (value: T) => Promise<T> | T): ValidationChainer<ObjType> {
@@ -87,9 +87,9 @@ export class ValidationChainer<ObjType> {
     }
 
     /**
-     * Fails the property if the previously checked property that is passed in has failed.
+     * Takes in a previously checked property and fails the selected property if that property had failed.
      *
-     * @param propertyKey - The property to check
+     * @param propertyKey - The property to check if it had failed
      * @param message - The message to show in the errors when it failed. Leave this blank to use the failed property's message.
      * @returns The validation chainer (this object) to chain.
      */

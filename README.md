@@ -35,7 +35,7 @@ const data = {
 const errors = await startChain(data)
     // starts check on foo
     .check("foo")
-    // does some validation
+    // does some validation with the property foo (foo's value is used as an argument)
     .validate((foo) => foo typeof "string", "Foo is not a string")
     .validate((foo) => foo.length >= 8, "Foo must be at least 8 characters")
 
@@ -137,6 +137,12 @@ const errors = await startChain(data)
     .validate<string>((status) => status === "happy", "Why are you not happy");
     .sanitize<string>((status) => status.toUpperCase());
 ```
+
+### Documentation
+
+The documentation is in the source code writtin in jsdoc (with typescript).
+IDE's like vscode will be able to show this will developing
+There might be plans to convert it into markdown in the future.
 
 ## Development
 
