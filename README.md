@@ -36,13 +36,13 @@ const errors = await startChain(data)
     // starts check on foo
     .check("foo")
     // does some validation
-    .validate((value) => value typeof "string", "Foo is not a string")
-    .validate((value) => value.length >= 8, "Foo must be at least 8 characters")
+    .validate((foo) => foo typeof "string", "Foo is not a string")
+    .validate((foo) => foo.length >= 8, "Foo must be at least 8 characters")
 
     .check("bar")
     // makes bar lower case (modifies the object getting passed in) so bar is now please
-    .sanitize((value) => value.toLowerCase())
-    .validate((value) => value == "please")
+    .sanitize((bar) => bar.toLowerCase())
+    .validate((bar) => bar == "please")
 
     // make sure to call this!
     .pack();
@@ -87,7 +87,10 @@ const errors = await startChain(data)
     // makes sure username is valid first
     .ensureProperty("username", "Username is invalid")
     // checks password using asynchronous hashing algorithm
-    .validate(async (value) => await argon2.verify(value, user.password), "Password is incorrect")
+    .validate(
+        async (storedPass) => await argon2.verify(storedPass, user.password),
+        "Password is incorrect"
+    )
 
     .pack();
 ```
@@ -109,10 +112,30 @@ const errors = await startChain(data)
     // removes whitespace at the beggining and end of name so it's now just "💩"
     .sanitize(validator.stripLow)
     .sanitize(validator.trim)
-    // property fails here because of the emoji
+    // property fails here because of the 💩
     .validate(validator.isAlphaNumeric, "Name must contain valid alpha-numeric characters")
 
     .pack();
+```
+
+---
+
+Using TypeScript:
+
+```ts
+import { startChain } from "validation-chainer";
+
+const data = {
+    status: "sad"
+};
+
+// starts chain that's specialized with data
+const errors = await startChain(data)
+    // intilisense info on object
+    .check("status")
+    // optional type generics on function (default is any)
+    .validate<string>((status) => status === "happy", "Why are you not happy");
+    .sanitize<string>((status) => status.toUpperCase());
 ```
 
 ## Development
