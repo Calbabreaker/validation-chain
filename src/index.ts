@@ -25,7 +25,7 @@ export class ValidationChainer<ObjType> {
     }
 
     /**
-     * Selects a property to start checking. All following validate, sanitize, ensure calls will be on this property.
+     * Selects a property to start checking. All following validate, sanitize, ensure calls will be on this property until the next check call.
      *
      * @param propertyKey - The property to use.
      * @returns The validation chainer (this object) to chain.
@@ -117,7 +117,7 @@ export class ValidationChainer<ObjType> {
 
     /**
      * The function to call at the end of the chain.
-     * This is will start executing the functions in the callstacks.
+     * This will start executing the validate, sanitize and or ensure calls.
      *
      * @returns A promise that resolves to an array of ValidationErrors. It's a promise because the validation functions might contain promises.
      */

@@ -140,8 +140,8 @@ const errors = await startChain(data)
 
 ### Documentation
 
-The documentation is in the source code writtin in jsdoc (with typescript).
-IDE's like vscode will be able to show this will developing
+The documentation is in the source code written in jsdoc (with typescript).
+IDE's like vscode will be able to show this while developing.
 There might be plans to convert it into markdown in the future.
 
 ## Development
