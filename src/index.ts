@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /**
- * A interface that ValidationChainer uses to show all the errors.
+ * A interface that ValidationChainer uses to represent the errors.
  */
 export interface ValidationError {
     property: string;
@@ -25,7 +25,7 @@ export class ValidationChainer<ObjType> {
     }
 
     /**
-     * Selects a property to start checking. All following validate, sanitize, ensure calls will be on this property until the next check call.
+     * Selects a property to start checking. All the following validate, sanitize, ensure calls will be on this property until the next check call.
      *
      * @param propertyKey - The property to use.
      * @returns The validation chainer (this object) to chain.
@@ -44,7 +44,7 @@ export class ValidationChainer<ObjType> {
     }
 
     /**
-     * Takes in a function to check if the property was valid and shows the message in the errors when not.
+     * Takes in a function to check if the property was valid and shows the message in the errors when it is not.
      * It will stop checking the selected property if it failed.
      *
      * @param func - A function that takes the selected property value and returns whether or not the property was valid. It can be a promise.
@@ -93,7 +93,7 @@ export class ValidationChainer<ObjType> {
     /**
      * Takes in a previously checked property and fails the selected property if that property had failed.
      *
-     * @param propertyKey - The property to check if it had failed
+     * @param propertyKey - The property to check if it had failed.
      * @param message - The message to show in the errors when it failed. Leave this blank to use the failed property's message.
      * @returns The validation chainer (this object) to chain.
      */
