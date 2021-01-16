@@ -50,7 +50,7 @@ const errors = await startChain(data)
 // check to see if there are any errors
 if (errors.length > 0)
     // there should only be one error
-    console.error(errors)
+    console.error(errors);
 ```
 
 Logs in console:
@@ -126,7 +126,7 @@ Using TypeScript:
 import { startChain } from "validation-chainer";
 
 const data = {
-    status = "sad",
+    status: "sad",
 };
 
 // starts chain that's specialized with data
@@ -134,8 +134,10 @@ const errors = await startChain(data)
     // intilisense info on object
     .check("status")
     // optional type generics on function (default is any)
-    .validate<string>((status) => status === "happy", "Why are you not happy");
-    .sanitize<string>((status) => status.toUpperCase());
+    .validate<string>((status) => status === "happy", "Why are you not happy")
+    .sanitize<string>((status) => status.toUpperCase())
+
+    .pack();
 ```
 
 ### Documentation
