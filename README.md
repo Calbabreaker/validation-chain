@@ -27,7 +27,7 @@ import { startChain } from "validation-chainer";
 
 const data = {
     foo: "yes",
-    bar: "PLEASE"
+    bar: "PLEASE",
 };
 
 // starts the chain with the data
@@ -126,7 +126,7 @@ Using TypeScript:
 import { startChain } from "validation-chainer";
 
 const data = {
-    status: "sad"
+    status = "sad",
 };
 
 // starts chain that's specialized with data
@@ -141,8 +141,8 @@ const errors = await startChain(data)
 ### Documentation
 
 The documentation is in the source code written in jsdoc (with typescript).
-IDE's like vscode will be able to show this while developing.
-There might be plans to convert it into markdown in the future.
+IDE's like vscode will be able to show it while developing.
+There might be plans to convert it into markdown or html in the future.
 
 ## Development
 
