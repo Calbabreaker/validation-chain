@@ -1,0 +1,29 @@
+name: Node Continuous Intergration
+
+on:
+    push:
+        branches: ["**"]
+        tags: ["**"]
+        pull_request:
+            branches: ["**"]
+
+jobs:
+    test:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v2
+            - name: Setup Node.js
+              uses: actions/setup-node@v1
+              with:
+                  node-version: 12.x
+            - name: Install yarn 
+              run: npm install -g yarn 
+            - name: Install dependencies
+              run: yarn 
+            - name: Build library
+              run: yarn build
+            - name: Run Unit Tests
+              run: test
+            - name: Lint code
+              run: yarn lint
