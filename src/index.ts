@@ -57,7 +57,7 @@ export class ValidationChainer<ObjType> {
     ): ValidationChainer<ObjType> {
         const callFunc = async () => {
             const propertyKey = this._currentObjProps.propertyKey;
-            const propertyValue = (this._objToValidate[propertyKey] as unknown) as T;
+            const propertyValue = this._objToValidate[propertyKey] as unknown as T;
 
             const success = await func(propertyValue);
 
@@ -78,10 +78,10 @@ export class ValidationChainer<ObjType> {
     sanitize<T = any>(func: (value: T) => Promise<T> | T): ValidationChainer<ObjType> {
         const callFunc = async () => {
             const propertyKey = this._currentObjProps.propertyKey;
-            const propertyValue = (this._objToValidate[propertyKey] as unknown) as T;
+            const propertyValue = this._objToValidate[propertyKey] as unknown as T;
 
             const result = await func(propertyValue);
-            this._objToValidate[propertyKey] = (result as unknown) as ObjType[keyof ObjType];
+            this._objToValidate[propertyKey] = result as unknown as ObjType[keyof ObjType];
 
             return true;
         };

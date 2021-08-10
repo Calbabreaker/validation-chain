@@ -24,6 +24,6 @@ jobs:
             - name: Build library
               run: yarn build
             - name: Run Unit Tests
-              run: test
+              run: yarn test
             - name: Lint code
               run: yarn lint
