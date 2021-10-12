@@ -174,7 +174,7 @@ yarn lint
 Build:
 
 ```sh
-npm run build
+yarn build
 ```
 
-Profit! This will also be automatically ran with github actions.
+Profit! All of this will also be automatically ran with github actions.
