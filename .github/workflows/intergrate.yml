@@ -17,13 +17,13 @@ jobs:
               uses: actions/setup-node@v1
               with:
                   node-version: 12.x
-            - name: Install yarn 
-              run: npm install -g yarn 
+            - name: Install pnpm
+              run: npm install -g pnpm
             - name: Install dependencies
-              run: yarn 
+              run: pnpm install
             - name: Build library
-              run: yarn build
+              run: pnpm build
             - name: Run Unit Tests
-              run: yarn test
+              run: pnpm test
             - name: Lint code
-              run: yarn lint
+              run: pnpm lint

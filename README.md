@@ -57,10 +57,10 @@ Logs in console:
 
 ```js
 [
-  {
-    property: "foo",
-    message: "Foo must be at least 8 characters",
-  },
+    {
+        property: "foo",
+        message: "Foo must be at least 8 characters",
+    },
 ];
 ```
 
@@ -73,26 +73,26 @@ import { startChain } from "validation-chainer";
 import argon2 from "argon2";
 
 const data = {
-  username: "bob",
-  password: "very strong password",
+    username: "bob",
+    password: "very strong password",
 };
 
 const user = await database.findOne({ username: data.username });
 
 const errors = await startChain(data)
-  .check("username")
-  .validate(() => user != null, "Username doesn't exist")
+    .check("username")
+    .validate(() => user != null, "Username doesn't exist")
 
-  .check("password")
-  // makes sure username is valid first
-  .ensure("username", "Username is invalid")
-  // checks password using asynchronous hashing algorithm
-  .validate(
-    async (storedPass) => await argon2.verify(storedPass, user.password),
-    "Password is incorrect"
-  )
+    .check("password")
+    // makes sure username is valid first
+    .ensure("username", "Username is invalid")
+    // checks password using asynchronous hashing algorithm
+    .validate(
+        async (storedPass) => await argon2.verify(storedPass, user.password),
+        "Password is incorrect"
+    )
 
-  .pack();
+    .pack();
 ```
 
 ---
@@ -104,21 +104,18 @@ import { startChain } from "validation-chainer";
 import validator from "validator";
 
 const data = {
-  name: "                 💩      ",
+    name: "                 💩      ",
 };
 
 const errors = await startChain(data)
-  .check("name")
-  // removes whitespace at the beggining and end of name so it's now just "💩"
-  .sanitize(validator.stripLow)
-  .sanitize(validator.trim)
-  // property fails here because of the 💩
-  .validate(
-    validator.isAlphaNumeric,
-    "Name must contain valid alpha-numeric characters"
-  )
+    .check("name")
+    // removes whitespace at the beggining and end of name so it's now just "💩"
+    .sanitize(validator.stripLow)
+    .sanitize(validator.trim)
+    // property fails here because of the 💩
+    .validate(validator.isAlphaNumeric, "Name must contain valid alpha-numeric characters")
 
-  .pack();
+    .pack();
 ```
 
 ---
@@ -129,18 +126,18 @@ Using TypeScript:
 import { startChain } from "validation-chainer";
 
 const data = {
-  status: "sad",
+    status: "sad",
 };
 
 // starts chain that's specialized with data
 const errors = await startChain(data)
-  // intilisense info on object
-  .check("status")
-  // optional type generics on function (default is any)
-  .validate<string>((status) => status === "happy", "Why are you not happy")
-  .sanitize<string>((status) => status.toUpperCase())
+    // intilisense info on object
+    .check("status")
+    // optional type generics on function (default is any)
+    .validate<string>((status) => status === "happy", "Why are you not happy")
+    .sanitize<string>((status) => status.toUpperCase())
 
-  .pack();
+    .pack();
 ```
 
 ### Documentation
@@ -154,7 +151,7 @@ There might be plans to convert it into markdown or html in the future.
 Install packages first: (using yarn)
 
 ```sh
-yarn
+pnpm install
 ```
 
 Change Code.
@@ -162,19 +159,19 @@ Change Code.
 Do tests:
 
 ```sh
-yarn test
+pnpm test
 ```
 
 Do linting:
 
 ```sh
-yarn lint
+pnpm lint
 ```
 
 Build:
 
 ```sh
-yarn build
+pnpm build
 ```
 
 Profit! All of this will also be automatically ran with github actions.
